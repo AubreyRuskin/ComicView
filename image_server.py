@@ -2,7 +2,7 @@ import io
 import os
 import zipfile
 from flask import send_file, abort
-from utils import MIME_TYPES, is_image_file
+from utils import MIME_TYPES, is_image_file, nat_sort_key
 
 
 def serve_cover(comic_path):
@@ -43,10 +43,11 @@ def list_images(version_path, chapter_name):
         try:
             with zipfile.ZipFile(zip_path, "r") as zf:
                 images = sorted(
-                    n for n in zf.namelist()
-                    if is_image_file(n)
-                    and not os.path.basename(n).startswith(".")
-                    and not os.path.basename(n).startswith("__")
+                    (n for n in zf.namelist()
+                     if is_image_file(n)
+                     and not os.path.basename(n).startswith(".")
+                     and not os.path.basename(n).startswith("__")),
+                    key=nat_sort_key,
                 )
         except Exception:
             abort(500, description="Cannot read chapter archive")
@@ -55,7 +56,10 @@ def list_images(version_path, chapter_name):
     folder_path = os.path.join(version_path, chapter_name)
     if os.path.isdir(folder_path):
         try:
-            images = sorted(f for f in os.listdir(folder_path) if is_image_file(f))
+            images = sorted(
+                (f for f in os.listdir(folder_path) if is_image_file(f)),
+                key=nat_sort_key,
+            )
         except Exception:
             images = []
         return images

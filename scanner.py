@@ -56,8 +56,9 @@ def _build_version(ver_path):
             try:
                 with zipfile.ZipFile(ch_path, "r") as zf:
                     images = sorted(
-                        n for n in zf.namelist()
-                        if is_image_file(n) and not _is_junk_entry(n)
+                        (n for n in zf.namelist()
+                         if is_image_file(n) and not _is_junk_entry(n)),
+                        key=nat_sort_key,
                     )
                 chapters.append({
                     "name": ch_name, "filename": ch_entry,
@@ -67,7 +68,10 @@ def _build_version(ver_path):
                 continue
         elif os.path.isdir(ch_path):
             try:
-                images = sorted(f for f in os.listdir(ch_path) if is_image_file(f))
+                images = sorted(
+                    (f for f in os.listdir(ch_path) if is_image_file(f)),
+                    key=nat_sort_key,
+                )
             except Exception:
                 images = []
             chapters.append({
