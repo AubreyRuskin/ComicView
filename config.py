@@ -22,3 +22,5 @@ CATALOG_CACHE_TTL = int(
     os.environ.get("CACHE_TTL", str(_cfg.get("cache_ttl", 300)))
 )
 DEBUG = os.environ.get("DEBUG", "").lower() in ("1", "true", "yes")
+SECRET_KEY = os.environ.get("SECRET_KEY", _cfg.get("secret_key", "dev-secret"))
+USERS = _cfg.get("users", {"admin": "comic123"})

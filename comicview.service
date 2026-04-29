@@ -1,0 +1,16 @@
+[Unit]
+Description=ComicView - Local Comic Web Reader
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/gwx/Workdir/ComicView
+ExecStart=/home/gwx/Workdir/ComicView/.venv/bin/python3 /home/gwx/Workdir/ComicView/app.py
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=comicview
+
+[Install]
+WantedBy=multi-user.target

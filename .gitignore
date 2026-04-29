@@ -1,1 +1,3 @@
 comic/
+__pycache__/
+*.pyc
